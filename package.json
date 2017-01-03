@@ -1,0 +1,52 @@
+{
+  "name": "@dschnare/maverick",
+  "version": "1.0.0",
+  "description": "Build tool that uses Webpack.",
+  "main": "index.js",
+  "bin": {
+    "maverick": "./bin/maverick.js"
+  },
+  "scripts": {},
+  "author": {
+    "name": "Darren Schnare",
+    "email": "schnare.d@gmail.com"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0",
+    "npm": ">=3.0.0"
+  },
+  "peerDependencies": {
+    "webpack": "^1.14.0"
+  },
+  "devDependencies": {
+    "eslint": "3.12.2",
+    "eslint-config-standard": "6.2.1",
+    "eslint-plugin-promise": "3.4.0",
+    "eslint-plugin-standard": "2.0.1"
+  },
+  "dependencies": {
+    "compression-webpack-plugin": "0.3.2",
+    "connect-history-api-fallback": "1.3.0",
+    "css-loader": "0.26.1",
+    "eventsource-polyfill": "0.9.6",
+    "express": "^4.14.0",
+    "extract-text-webpack-plugin": "1.0.1",
+    "file-loader": "0.9.0",
+    "friendly-errors-webpack-plugin": "1.1.2",
+    "html-webpack-plugin": "2.25.0",
+    "http-proxy-middleware": "0.17.3",
+    "json-loader": "0.5.4",
+    "less": ">=2.7.1",
+    "less-loader": "2.2.3",
+    "opn": "4.0.2",
+    "postcss-loader": "1.2.1",
+    "ts-loader": "1.3.3",
+    "typescript": ">=2.1.4",
+    "url-loader": "0.5.7",
+    "vue-style-loader": "^1.0.0",
+    "webpack-dev-middleware": "1.9.0",
+    "webpack-dev-server": "1.16.2",
+    "webpack-hot-middleware": "2.14.0"
+  }
+}

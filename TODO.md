@@ -1,0 +1,3 @@
+- Add vue-loader integration (at some point)
+- Add nightwatch e2e testing capability?? `maverick e2e`
+- Add Karma unit testing capability?? `maverick test`
