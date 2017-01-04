@@ -1,7 +1,7 @@
 {
   "name": "maverick",
   "version": "1.0.0",
-  "description": "Build tool that uses Webpack.",
+  "description": "My build tool built on top of Webpack.",
   "main": "index.js",
   "bin": {
     "maverick": "./bin/maverick.js"
@@ -45,6 +45,7 @@
     "webpack": "^1.14.0",
     "webpack-dev-middleware": "1.9.0",
     "webpack-dev-server": "1.16.2",
+    "webpack-fail-plugin": "1.0.5",
     "webpack-hot-middleware": "2.14.0"
   }
 }

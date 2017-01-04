@@ -28,8 +28,9 @@ with a dev server configured with hot module reloading with one command:
 
 The following is configured out of the box:
 
-- JSX
+- JSX (.jsx and even JSX in any .js file as well)
 - ES2015 syntax via Typescript
+- Typescript support (.ts and .tsx modules)
 - Async/await support ( http://bit.ly/2ixus5E )
 - LESS and CSS imports and minification
 - Postcss

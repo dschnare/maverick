@@ -14,6 +14,8 @@ module.exports = {
   nodeModulesDir: nodeModulesDir,
   outputPath: outputPath,
   outputPublicPath: '/',
+  sourceMap: true,
+  extractCss: true,
   entrypoints: {
     // TODO: Add comments explaining the properties.
   },

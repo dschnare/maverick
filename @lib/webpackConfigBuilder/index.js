@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const failPlugin = require('webpack-fail-plugin')
 const generateEntrypointConfig = require('./generateEntrypointConfig')
 
 module.exports = function webpackConfig (settings = {}, buildMode = 'debug') {
@@ -11,6 +12,8 @@ module.exports = function webpackConfig (settings = {}, buildMode = 'debug') {
     nodeModulesDir = path.resolve('node_modules'),
     outputPath = path.resolve('wwwroot'),
     outputPublicPath = '/',
+    sourceMap = true,
+    extractCss = true,
     entrypoints = {},
     externals = {},
     alias = {},
@@ -79,9 +82,10 @@ module.exports = function webpackConfig (settings = {}, buildMode = 'debug') {
   } = settings
 
   const entrypointConfig = generateEntrypointConfig(entrypoints, buildMode)
+  const sourceMapQuery = sourceMap ? '?sourceMap' : ''
   const chunkhash = RELEASE ? '.[chunkhash]' : ''
-  const cssExtractTextPlugin = new ExtractTextPlugin('styles/[name].[contenthash].css', { disable: DEBUG })
-  const componentCssExtractTextPlugin = new ExtractTextPlugin('styles/[name].[contenthash].css', { disable: DEBUG })
+  const cssExtractTextPlugin = new ExtractTextPlugin('styles/[name].[contenthash].css', { disable: !extractCss || DEBUG })
+  const componentCssExtractTextPlugin = new ExtractTextPlugin('styles/[name].[contenthash].css', { disable: !extractCss || DEBUG })
   const config = {
     entry: entrypointConfig.entry,
     devServer: { proxy },
@@ -91,7 +95,7 @@ module.exports = function webpackConfig (settings = {}, buildMode = 'debug') {
       filename: `scripts/[name]${chunkhash}.js`,
       chunkFilename: `scripts/[id]${chunkhash}.js`
     },
-    devtool: RELEASE ? '#source-map' : '#eval-source-map',
+    devtool: sourceMap ? (RELEASE ? '#source-map' : '#eval-source-map') : false,
     externals,
     alias,
     resolve: {
@@ -110,7 +114,15 @@ module.exports = function webpackConfig (settings = {}, buildMode = 'debug') {
           query: {
             transpileOnly: true,
             entryFileJs: true,
-            configFileName: path.join(__dirname, 'tsconfig.sourcemap=true.json')
+            configFileName: path.join(__dirname, `tsconfig.sourcemap=${!!sourceMap}.json`)
+          }
+        },
+        {
+          test: /\.tsx?$/,
+          loader: 'ts-loader',
+          include: jsIncludeDirs,
+          query: {
+            configFileName: path.join(__dirname, `tsconfig.sourcemap=${!!sourceMap}.json`)
           }
         },
         {
@@ -119,11 +131,11 @@ module.exports = function webpackConfig (settings = {}, buildMode = 'debug') {
         },
         {
           test: /\.css$/,
-          loader: cssExtractTextPlugin.extract('vue-style', 'css?sourceMap&importLoaders=1!postcss')
+          loader: cssExtractTextPlugin.extract('vue-style', `css${sourceMapQuery}&importLoaders=1!postcss`)
         },
         {
           test: /\.less$/,
-          loader: cssExtractTextPlugin.extract('vue-style', 'css?sourceMap&importLoaders=1!postcss!less?sourceMap')
+          loader: cssExtractTextPlugin.extract('vue-style', `css${sourceMapQuery}&importLoaders=1!postcss!less${sourceMapQuery}`)
         }
       ].concat(
         loaders
@@ -141,6 +153,7 @@ module.exports = function webpackConfig (settings = {}, buildMode = 'debug') {
       new webpack.optimize.OccurrenceOrderPlugin(),
       cssExtractTextPlugin,
       componentCssExtractTextPlugin,
+      failPlugin,
       plugins
     ).filter(Boolean)
   }
