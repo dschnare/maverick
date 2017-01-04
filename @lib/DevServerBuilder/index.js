@@ -1,7 +1,6 @@
 const path = require('path')
 const express = require('express')
 const webpack = require('webpack')
-const opn = require('opn')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const proxyMiddleware = require('http-proxy-middleware')
 const webpackDevMiddleware = require('webpack-dev-middleware')
@@ -99,18 +98,7 @@ module.exports = class DevServerBuilder {
       .addStatic()
   }
 
-  listen (port = 8080, callback) {
-    return this.app.listen(port, callback || function (err) {
-      if (err) {
-        console.log(err)
-        return
-      }
-
-      const uri = 'http://localhost:' + port
-      console.log('Listening at ' + uri + '\n')
-
-      // When env is testing, we don't need open it.
-      if (process.env.NODE_ENV !== 'testing') opn(uri)
-    })
+  listen (...args) {
+    return this.app.listen(...args)
   }
 }

@@ -15,14 +15,15 @@ with a dev server configured with hot module reloading with one command:
       init     Saves a default maverick.settings.js file in the current working directory.
 
       build    Builds source files and saves them outputPath.
-        --settings,-S        The module path for the settings. {default: maverick.settings.js}
+        --settings,-S        The module path for the settings {default: maverick.settings.js}
         --build-mode,-B      The build mode (supported values: debug, test, release) {default: debug}
 
       serve    Serves source files with a dev server.
-        --settings,-S        The module path for the settings. {default: maverick.settings.js}
-        --port,-P            The port to bind the server to. {default: 8080}
+        --settings,-S        The module path for the settings {default: maverick.settings.js}
+        --port,-P            The port to bind the server to {default: 8080}
+        --host,-H            The host name for the dev server {default: localhost}
         --serve-mode,-M      The serve mode (supported values: hmr, inline) {default: hmr}
-        --app-builder,-A     The module path for an Express app builder to install the dev server as middleware onto.
+        --app-builder,-A     The module path for an Express app builder to install the dev server as middleware onto
 
 ## Pre-configured Loaders
 
@@ -62,25 +63,28 @@ To mount the dev server into your own app server you need to define an
 Example:
 
     // src/AppBuilder/index.js
+    const express = require('express')
     module.exports = class AppBuilder {
       constructor () {
         this.app = express()
         // add any early middleware to my app
       }
 
-      use (app) {
-        // mount another app to our app
-        this.app.use(app)
+      use (...args) {
+        // mount middleware
+        this.app.use(...args)
         return this
       }
 
       build () {
         // finish adding our usual middlware to our app
         this.app.use('/', express.static(__dirname))
+        return this
       }
 
-      listen (port, callback) {
-        return this.app.listen(port, callback)
+      // NOTE: listen() must accept port, host and a callback.
+      listen (port, host, callback) {
+        return this.app.listen(port, host, callback)
       }
     }
 

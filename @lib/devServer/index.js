@@ -5,7 +5,7 @@ const webpackConfigBuilder = require('../webpackConfigBuilder')
 
 // See: http://webpack.github.io/docs/webpack-dev-server.html
 
-module.exports = function (settings = {}, serveMode = 'hmr') {
+module.exports = function (settings = {}, serveMode = 'hmr', port = 8080, host = 'localhost') {
   process.env.NODE_ENV = 'development'
 
   const HMR = serveMode === 'hmr'
@@ -17,7 +17,7 @@ module.exports = function (settings = {}, serveMode = 'hmr') {
       let src = webpackConfig.entry[key]
       if (typeof src === 'string') src = [src]
       src.unshift(
-        'webpack-dev-server/client?http://localhost:8080/',
+        `webpack-dev-server/client?http://${host}:${port}/`,
         'webpack/hot/dev-server'
       )
       webpackConfig.entry[key] = src
@@ -34,7 +34,7 @@ module.exports = function (settings = {}, serveMode = 'hmr') {
   // Inline page reload.
   } else {
     Object.keys(webpackConfig.entry).forEach(key => {
-      webpackConfig.entry[key].unshift('webpack-dev-server/client?http://localhost:8080/')
+      webpackConfig.entry[key].unshift(`webpack-dev-server/client?http://${host}:${port}/`)
     })
   }
 

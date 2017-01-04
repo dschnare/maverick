@@ -9,6 +9,7 @@ const args = process.argv.slice(2)
 const command = args.shift()
 const settingsPath = readArg(args, ['--settings', '-S'], 'maverick.settings.js')
 const port = toInt(readArg(args, ['--port', '-P']), 8080)
+const host = readArg(args, ['--host,-H'], 'localhost')
 const buildMode = toEnum(readArg(args, ['--build-mode', '-B']), ['debug', 'test', 'release'], 'debug')
 const serveMode = toEnum(readArg(args, ['--serve-mode', '-M']), ['hmr', 'inline'], 'hmr')
 const appBuilderPath = readArg(args, ['--app-builder', '-A'], '')
@@ -34,32 +35,29 @@ if (settingsError) {
         process.exit(9)
       }
 
+      let server = null
+
       if (AppBuilder) {
-        new AppBuilder()
-          .use(new maverick.DevServerBuilder(settings).build({ hmr: serveMode === 'hmr' }).app)
+        server = new AppBuilder()
+          .use(
+            new maverick.DevServerBuilder(settings)
+              .build({ hmr: serveMode === 'hmr' }).app
+          )
           .build()
-          .listen(port, function (error) {
-            if (error) {
-              console.error(error)
-            } else {
-              const uri = 'http://localhost:' + port
-              console.log(`Listening at ${uri}\n'`)
-              // When env is testing, we don't need open it.
-              if (process.env.NODE_ENV !== 'testing') opn(uri)
-            }
-          })
       } else {
-        maverick.devServer(settings, serveMode).listen(port, function (error) {
-          if (error) {
-            console.error(error)
-          } else {
-            const uri = 'http://localhost:' + port
-            console.log(`Listening at ${uri}\n'`)
-            // When env is testing, we don't need open it.
-            if (process.env.NODE_ENV !== 'testing') opn(uri)
-          }
-        })
+        server = maverick.devServer(settings, serveMode, port, host)
       }
+
+      server.listen(port, host, function (error) {
+        if (error) {
+          console.error(error)
+        } else {
+          const uri = `http://${host}:${port}`
+          console.log(`Listening at ${uri}\n'`)
+          // When env is testing, we don't need open it.
+          if (process.env.NODE_ENV !== 'testing') opn(uri)
+        }
+      })
       break
     default:
       console.log([
@@ -70,14 +68,15 @@ if (settingsError) {
         '  init     Saves a default maverick.settings.js file in the current working directory.',
         '',
         '  build    Builds source files and saves them outputPath.',
-        '    --settings,-S        The module path for the settings. {default: maverick.settings.js}',
+        '    --settings,-S        The module path for the settings {default: maverick.settings.js}',
         '    --build-mode,-B      The build mode (supported values: debug, test, release) {default: debug}',
         '',
         '  serve    Serves source files with a dev server.',
-        '    --settings,-S        The module path for the settings. {default: maverick.settings.js}',
-        '    --port,-P            The port to bind the server to. {default: 8080}',
+        '    --settings,-S        The module path for the settings {default: maverick.settings.js}',
+        '    --port,-P            The port to bind the server to {default: 8080}',
+        '    --host,-H            The host name for the dev server {default: localhost}',
         '    --serve-mode,-M      The serve mode (supported values: hmr, inline) {default: hmr}',
-        '    --app-builder,-A     The module path for an Express app builder to install the dev server as middleware onto.',
+        '    --app-builder,-A     The module path for an Express app builder to install the dev server as middleware onto',
         ''
       ].join('\n'))
   }
