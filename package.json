@@ -1,5 +1,5 @@
 {
-  "name": "@dschnare/maverick",
+  "name": "maverick",
   "version": "1.0.0",
   "description": "Build tool that uses Webpack.",
   "main": "index.js",
@@ -15,9 +15,6 @@
   "engines": {
     "node": ">=6.0.0",
     "npm": ">=3.0.0"
-  },
-  "peerDependencies": {
-    "webpack": "^1.14.0"
   },
   "devDependencies": {
     "eslint": "3.12.2",
@@ -45,6 +42,7 @@
     "typescript": ">=2.1.4",
     "url-loader": "0.5.7",
     "vue-style-loader": "^1.0.0",
+    "webpack": "^1.14.0",
     "webpack-dev-middleware": "1.9.0",
     "webpack-dev-server": "1.16.2",
     "webpack-hot-middleware": "2.14.0"

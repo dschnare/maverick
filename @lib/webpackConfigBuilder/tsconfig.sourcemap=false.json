@@ -6,6 +6,9 @@
     "allowJs": true,
     "jsx": "react",
     "reactNamespace": "React",
-    "sourceMap": false
+    "sourceMap": false,
+    "lib": [
+      "dom","es5","es2015.promise","webworker"
+    ]
   }
 }
