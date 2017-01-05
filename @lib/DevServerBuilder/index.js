@@ -9,61 +9,104 @@ const connectHistoryApiFallback = require('connect-history-api-fallback')
 const webpackConfigBuilder = require('../webpackConfigBuilder')
 
 module.exports = class DevServerBuilder {
-  constructor (settings = {}) {
+  constructor (settings = {}, { withHmr = true } = {}) {
     const webpackConfig = webpackConfigBuilder(settings)
-    const compiler = webpack(webpackConfig)
 
     const app = express()
 
+    this.useHmr = false
+    this.queue = []
     this.app = app
     this.settings = settings
     this.webpackConfig = webpackConfig
-    this.compiler = compiler
+
+    this.addHttpProxies()
+      .addHtml5ApiFallback()
+      .addWebpack()
+      .addHmr({ disable: !withHmr })
+      .addStatic()
   }
 
-  addHttpProxies () {
-    // Define HTTP proxies to your custom API backend
-    // https://github.com/chimurai/http-proxy-middleware
-    const app = this.app
-    const proxy = this.webpackConfig.devServer.proxy || {}
-    Object.keys(proxy).forEach(function (context) {
-      let options = proxy[context]
-      if (typeof options === 'string') options = { target: options }
-      if (options.context) context = options.context
-      app.use(proxyMiddleware(context, options))
-    })
+  build () {
+    if (this.useHmr) this.performHmrWebpackConfigMods()
+    this.compiler = webpack(this.webpackConfig)
 
+    while (this.queue.length) {
+      this.queue.shift()()
+    }
+
+    return this
+  }
+
+  listen (...args) {
+    return this.app.listen(...args)
+  }
+
+  // Private methods
+
+  addHttpProxies () {
+    this.queue.push(() => {
+      // Define HTTP proxies to your custom API backend
+      // https://github.com/chimurai/http-proxy-middleware
+      const app = this.app
+      const proxy = this.webpackConfig.devServer.proxy || {}
+      Object.keys(proxy).forEach(function (context) {
+        let options = proxy[context]
+        if (typeof options === 'string') options = { target: options }
+        if (options.context) context = options.context
+        app.use(proxyMiddleware(context, options))
+      })
+    })
     return this
   }
 
   addHtml5ApiFallback () {
-    // Handle fallback for HTML5 history API
-    this.app.use(connectHistoryApiFallback())
+    this.queue.push(() => {
+      // Handle fallback for HTML5 history API
+      this.app.use(connectHistoryApiFallback())
+    })
     return this
   }
 
   addWebpack () {
-    const devMiddleware = webpackDevMiddleware(this.compiler, {
-      publicPath: this.webpackConfig.output.publicPath,
-      stats: { colors: true, chunks: false }
-    })
+    this.queue.push(() => {
+      const devMiddleware = webpackDevMiddleware(this.compiler, {
+        publicPath: this.webpackConfig.output.publicPath,
+        stats: { colors: true, chunks: false }
+      })
 
-    this.app.use(devMiddleware)
+      this.app.use(devMiddleware)
+    })
     return this
   }
 
-  addHmr ({ disable = false }) {
+  addHmr ({ disable = false } = {}) {
     if (disable) return this
-
-    const hotMiddleware = webpackHotMiddleware(this.compiler)
-    // force page reload when html-webpack-plugin template changes
-    this.compiler.plugin('compilation', function (compilation) {
-      compilation.plugin('html-webpack-plugin-after-emit', function (data, callback) {
-        hotMiddleware.publish({ action: 'reload' })
-        callback()
+    this.useHmr = true
+    this.queue.push(() => {
+      const hotMiddleware = webpackHotMiddleware(this.compiler)
+      // force page reload when html-webpack-plugin template changes
+      this.compiler.plugin('compilation', function (compilation) {
+        compilation.plugin('html-webpack-plugin-after-emit', function (data, callback) {
+          hotMiddleware.publish({ action: 'reload' })
+          callback()
+        })
       })
-    })
 
+      this.app.use(this.hotMiddleware)
+    })
+    return this
+  }
+
+  addStatic () {
+    this.queue.push(() => {
+      // Serve static assets
+      this.app.use(this.webpackConfig.output.publicPath, express.static(this.webpackConfig.output.path))
+    })
+    return this
+  }
+
+  performHmrWebpackConfigMods () {
     Object.keys(this.webpackConfig.entry).forEach(key => {
       let src = this.webpackConfig.entry[key]
       if (typeof src === 'string') src = [src]
@@ -79,26 +122,5 @@ module.exports = class DevServerBuilder {
         // See: https://github.com/geowarin/friendly-errors-webpack-plugin
       })
     )
-
-    this.app.use(hotMiddleware)
-    return this
-  }
-
-  addStatic () {
-    // Serve static assets
-    this.app.use(this.webpackConfig.output.publicPath, express.static(this.webpackConfig.output.path))
-    return this
-  }
-
-  build ({ hmr = true } = {}) {
-    return this.addHttpProxies()
-      .addHtml5ApiFallback()
-      .addWebpack()
-      .addHmr({ disable: !hmr })
-      .addStatic()
-  }
-
-  listen (...args) {
-    return this.app.listen(...args)
   }
 }

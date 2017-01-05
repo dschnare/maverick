@@ -40,8 +40,8 @@ if (settingsError) {
       if (AppBuilder) {
         server = new AppBuilder()
           .use(
-            new maverick.DevServerBuilder(settings)
-              .build({ hmr: serveMode === 'hmr' }).app
+            new maverick.DevServerBuilder(settings, { withHmr: serveMode === 'hmr' })
+              .build().app
           )
           .build()
       } else {
