@@ -93,7 +93,7 @@ module.exports = class DevServerBuilder {
         })
       })
 
-      this.app.use(this.hotMiddleware)
+      this.app.use(hotMiddleware)
     })
     return this
   }
