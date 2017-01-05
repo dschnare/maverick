@@ -16,6 +16,10 @@
     "node": ">=6.0.0",
     "npm": ">=3.0.0"
   },
+  "peerDependencies": {
+    "eventsource-polyfill": "*",
+    "autoprefixer": "*"
+  },
   "devDependencies": {
     "eslint": "3.12.2",
     "eslint-config-standard": "6.2.1",
