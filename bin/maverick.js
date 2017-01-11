@@ -129,7 +129,7 @@ function tryLoadAppBuilder (appBuilderPath) {
         return [null, new Error('App builder does not have use(), build() and listen() methods on prototype.')]
       }
     } catch (error) {
-      return [null, new Error('App builder module not found: ' + appBuilderPath)]
+      return [null, new Error('App builder module cannot be loaded: ' + appBuilderPath + ' InnerError:' + error)]
     }
   }
 

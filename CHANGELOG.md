@@ -1,15 +1,10 @@
-# 2.0.0 - Jan 4, 2017
+# 3.0.11 - Jan, 10 2017
 
-- Add support for `--host,-H` CLI argument when serving.
+Add inner error to error message when app builder module fails to load.
 
-- Fix issue with hardcoding the host and port when running the dev server
-  without an AppBuilder and in HMR mode.
+# 3.0.1 - Jan 4, 2017
 
-- BREAKING CHANGE: DevServerBuilder#listen now has the same signature as
-  WebpackDevServer#listen.
-
-- BREAKING CHANGE: AppBuilder#listen must accept port, host and a callback at a
-  minimum.
+- Fix issue with HMR configuration when AppBuilder module is specified.
 
 # 3.0.0 - Jan 4, 2017
 
@@ -29,6 +24,15 @@
   After the change:
     new DevServerBuilder(settings, { withHmr: true }).build()
 
-# 3.0.1 - Jan 4, 2017
+# 2.0.0 - Jan 4, 2017
 
-- Fix issue with HMR configuration when AppBuilder module is specified.
+- Add support for `--host,-H` CLI argument when serving.
+
+- Fix issue with hardcoding the host and port when running the dev server
+  without an AppBuilder and in HMR mode.
+
+- BREAKING CHANGE: DevServerBuilder#listen now has the same signature as
+  WebpackDevServer#listen.
+
+- BREAKING CHANGE: AppBuilder#listen must accept port, host and a callback at a
+  minimum.
