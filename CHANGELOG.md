@@ -1,6 +1,6 @@
 # 3.1.1 - Jan, 11 2017
 
-Fix incorrect import path used for shelljs.
+- Fix incorrect import path used for shelljs.
 
 # 3.1.0 - Jan, 11 2017
 
