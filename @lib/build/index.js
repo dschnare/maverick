@@ -1,3 +1,6 @@
+const path = require('path')
+const fs = require('fs')
+const shell = require('shell')
 const webpack = require('webpack')
 const webpackConfigBuilder = require('../webpackConfigBuilder')
 
@@ -38,6 +41,31 @@ module.exports = function build (settings = {}, buildMode = 'debug', callback = 
         minRatio: 0.8
       })
     )
+  }
+
+  // Copy the copy targets. These are static files meant to be copied when building.
+  if (settings.copyTargets) {
+    settings.copyTargets
+      .filter((target) => fs.existsSync(target.src))
+      .reduce((newTargets, target) => {
+        // Do a file listing for sources that end with a '/' so we copy the contents
+        // of a directory and not the directory itself.
+        if (target.src.substr(-1) === '/') {
+          newTargets = shell.ls('-R', target.src + '**/*.*').map((src) => {
+            return {
+              src,
+              dest: path.join(target.dest, path.relative(target.src, src))
+            }
+          }).concat(newTargets)
+        } else {
+          newTargets.push(target)
+        }
+        return newTargets
+      }, [])
+      .forEach((target) => {
+        shell.mkdir('-p', path.dirname(target.dest))
+        shell.cp('-fuR', target.src, target.dest)
+      })
   }
 
   function doBuild () {

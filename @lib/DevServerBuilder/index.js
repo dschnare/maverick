@@ -101,7 +101,12 @@ module.exports = class DevServerBuilder {
   addStatic () {
     this.queue.push(() => {
       // Serve static assets
-      this.app.use(this.webpackConfig.output.publicPath, express.static(this.webpackConfig.output.path))
+      const staticRoutes = this.settings.staticRoutes || {}
+      Object.keys(staticRoutes).forEach(route => {
+        let staticPaths = [].concat(staticRoutes[route])
+        staticPaths = staticPaths.map(s => express.static(s))
+        this.app.use(route, ...staticPaths)
+      })
     })
     return this
   }

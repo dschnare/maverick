@@ -1,3 +1,4 @@
+const express = require('express')
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
@@ -39,5 +40,22 @@ module.exports = function (settings = {}, serveMode = 'hmr', port = 8080, host =
   }
 
   const compiler = webpack(webpackConfig)
-  return new WebpackDevServer(compiler, { hot: HMR })
+  const staticRoutes = settings.staticRoutes || {}
+  return new WebpackDevServer(compiler, {
+    hot: HMR,
+    quiet: true,
+    contentBase: staticRoutes['/']
+      ? [].concat(staticRoutes['/']).shift()
+      : webpackConfig.output.path,
+    setup (app) {
+      // Serve static assets
+      Object.keys(staticRoutes)
+        .filter(route => route !== '/')
+        .forEach(route => {
+          let staticPaths = [].concat(staticRoutes[route])
+          staticPaths = staticPaths.map(s => express.static(s))
+          app.use(route, ...staticPaths)
+        })
+    }
+  })
 }

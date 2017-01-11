@@ -1,6 +1,14 @@
+# 3.1.0 - Jan, 11 2017
+
+- Add copyTargets setting option that dictates what files should be copied
+  when building the project.
+
+- Add staticRoutes setting option that dictates what static routes should be
+  installed when running the dev server.
+
 # 3.0.11 - Jan, 10 2017
 
-Add inner error to error message when app builder module fails to load.
+- Add inner error to error message when app builder module fails to load.
 
 # 3.0.1 - Jan 4, 2017
 

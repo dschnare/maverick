@@ -24,6 +24,27 @@ module.exports = {
   },
   alias: {},
   proxy: {},
+  // Static routes to be installed when running the dev server.
+  // Routes can route to an array of directory paths or a single directory path.
+  // However, the '/' route can only route to a single directory path.
+  staticRoutes: {
+    '/': path.resolve('public')
+    /*
+    // Can route to an array of folders
+    '/vendor': [
+      path.resolve('node_modules/jquery/dist'),
+      path.resolve('somefolder')
+    ]
+    */
+  },
+  // Folders and files to copy. If the source ends with '/' then the
+  // directory contents will be copied and not the directory itself.
+  copyTargets: [
+    {
+      src: path.resolve('public') + '/',
+      dest: outputPath
+    }
+  ],
   jsIncludeDirs: ['@client', '@shared'].map(p => path.resolve(p)),
   hooks: {
     clean: function (buildMode, done) {
