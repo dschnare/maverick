@@ -1,6 +1,6 @@
 {
   "name": "maverick",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "My build tool built on top of Webpack.",
   "main": "index.js",
   "bin": {

@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const shell = require('shell')
+const shell = require('shelljs')
 const webpack = require('webpack')
 const webpackConfigBuilder = require('../webpackConfigBuilder')
 
