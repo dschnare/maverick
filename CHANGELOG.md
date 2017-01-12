@@ -1,3 +1,8 @@
+# 3.1.4 - Jan, 12 2017
+
+- Change devtool to inline-source-map when debugging so source maps are loaded
+  correctly when running the dev server.
+
 # 3.1.3 - Jan, 12 2017
 
 - Resolve issue with app builder module resolution. Ensure relative module paths

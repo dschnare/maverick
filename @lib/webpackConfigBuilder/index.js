@@ -95,7 +95,7 @@ module.exports = function webpackConfig (settings = {}, buildMode = 'debug') {
       filename: `scripts/[name]${chunkhash}.js`,
       chunkFilename: `scripts/[id]${chunkhash}.js`
     },
-    devtool: sourceMap ? (RELEASE ? '#source-map' : '#eval-source-map') : false,
+    devtool: sourceMap ? (RELEASE ? '#source-map' : '#inline-source-map') : false,
     externals,
     alias,
     resolve: {
