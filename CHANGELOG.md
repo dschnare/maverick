@@ -1,3 +1,7 @@
+# 3.1.2 - Jan, 11 2017
+
+- Add support for specifying a directory as a destination for a copy target.
+
 # 3.1.1 - Jan, 11 2017
 
 - Fix incorrect import path used for shelljs.

@@ -63,7 +63,11 @@ module.exports = function build (settings = {}, buildMode = 'debug', callback = 
         return newTargets
       }, [])
       .forEach((target) => {
-        shell.mkdir('-p', path.dirname(target.dest))
+        let dest = path.dirname(target.dest)
+        if (target.dest.substr(-1) === '/') {
+          dest = target.dest
+        }
+        shell.mkdir('-p', dest)
         shell.cp('-fuR', target.src, target.dest)
       })
   }
