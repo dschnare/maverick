@@ -120,6 +120,14 @@ function tryLoadAppBuilder (appBuilderPath) {
   let AppBuilder = null
 
   if (appBuilderPath) {
+    // If the app builder path is a relative module path then
+    // it's relative to the current working directory. If we don't
+    // resolve this path before calling require() then require will
+    // assume the path is relative to this file (maverick.js).
+    if (appBuilderPath.charAt(0) === '.') {
+      appBuilderPath = path.resolve(appBuilderPath)
+    }
+
     try {
       AppBuilder = require(appBuilderPath)
       if (typeof AppBuilder !== 'function' ||

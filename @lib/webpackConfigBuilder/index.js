@@ -106,6 +106,12 @@ module.exports = function webpackConfig (settings = {}, buildMode = 'debug') {
       fallback: [nodeModulesDir, path.resolve(__dirname, '../node_modules')]
     },
     module: {
+      postLoders: [
+        {
+          test: /\.js$/,
+          loader: 'source-map-loader'
+        }
+      ],
       loaders: [
         {
           test: /\.js$/,

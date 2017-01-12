@@ -1,3 +1,11 @@
+# 3.1.3 - Jan, 12 2017
+
+- Resolve issue with app builder module resolution. Ensure relative module paths
+  are handled correctly.
+
+- Add source-map-loader to the preLoaders array so that emitted source maps from
+  TypeScript will be loaded into Webpack.
+
 # 3.1.2 - Jan, 11 2017
 
 - Add support for specifying a directory as a destination for a copy target.

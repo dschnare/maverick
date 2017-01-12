@@ -115,7 +115,12 @@ module.exports = class DevServerBuilder {
     Object.keys(this.webpackConfig.entry).forEach(key => {
       let src = this.webpackConfig.entry[key]
       if (typeof src === 'string') src = [src]
-      src.unshift(path.join(__dirname, 'hmrClient'))
+      src = [
+        './' + path.relative(
+          process.cwd(),
+          path.join(__dirname, 'hmrClient')
+        )
+      ].concat(src)
       this.webpackConfig.entry[key] = src
     })
 
