@@ -1,3 +1,13 @@
+# 3.2.0 - Jan 18, 2017
+
+- Remove call to opn so that the default browser will not open when running the
+  dev server in production or development.
+
+- Replace TypeScript compiler with Babel so that CommonJS modules with a default
+  export can be imported using ES2015 module syntax.
+
+- BREAKING CHANGE: async/await will no longer down comiler to ES5.
+
 # 3.1.4 - Jan, 12 2017
 
 - Change devtool to inline-source-map when debugging so source maps are loaded
