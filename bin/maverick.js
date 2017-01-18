@@ -2,7 +2,6 @@
 
 const fs = require('fs')
 const path = require('path')
-const opn = require('opn')
 const maverick = require('../index')
 
 const args = process.argv.slice(2)
@@ -54,8 +53,6 @@ if (settingsError) {
         } else {
           const uri = `http://${host}:${port}`
           console.log(`Listening at ${uri}\n'`)
-          // When env is testing, we don't need open it.
-          if (process.env.NODE_ENV !== 'testing') opn(uri)
         }
       })
       break
