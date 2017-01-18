@@ -11,7 +11,7 @@ module.exports = function genrateEntrypointConfig (entrypoints = {}, buildMode =
     let entry = entrypoints[outputName]
 
     const { src } = entry
-    config.entry[outputName] = src
+    config.entry[outputName] = [].concat(src)
 
     let { htmlPage } = entry
     if (htmlPage) {

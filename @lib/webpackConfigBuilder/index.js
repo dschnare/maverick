@@ -99,36 +99,32 @@ module.exports = function webpackConfig (settings = {}, buildMode = 'debug') {
     externals,
     alias,
     resolve: {
-      extensions: [ '', '.js', '.jsx', '.json', '.ts', '.tsx' ],
-      fallback: [nodeModulesDir, path.resolve(__dirname, '../node_modules')]
+      extensions: [ '', '.js', '.jsx', '.json' ],
+      fallback: [nodeModulesDir, path.resolve(__dirname, '../../node_modules')]
     },
     resolveLoader: {
-      fallback: [nodeModulesDir, path.resolve(__dirname, '../node_modules')]
+      fallback: [nodeModulesDir, path.resolve(__dirname, '../../node_modules')]
     },
     module: {
-      postLoders: [
-        {
-          test: /\.js$/,
-          loader: 'source-map-loader'
-        }
-      ],
       loaders: [
         {
           test: /\.js$/,
-          loader: 'ts-loader',
+          loader: 'babel-loader',
           include: jsIncludeDirs,
+          exclude: /(node_modules|bower_components)/,
           query: {
-            transpileOnly: true,
-            entryFileJs: true,
-            configFileName: path.join(__dirname, `tsconfig.sourcemap=${!!sourceMap}.json`)
-          }
-        },
-        {
-          test: /\.tsx?$/,
-          loader: 'ts-loader',
-          include: jsIncludeDirs,
-          query: {
-            configFileName: path.join(__dirname, `tsconfig.sourcemap=${!!sourceMap}.json`)
+            presets: ['env', {
+              useBuiltIns: true,
+              targets: {
+                browsers: ['last 2 versions']
+              }
+            }],
+            plugins: ['transform-runtime', {
+              helpers: true,
+              polyfill: false,
+              regenerator: false,
+              moduleName: 'babel-runtime'
+            }]
           }
         },
         {

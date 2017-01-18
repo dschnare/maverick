@@ -89,7 +89,7 @@ function readArg (args, names, defaultValue = false) {
       if (args[k].indexOf('=') > 0) {
         value = args[k].split('=').pop()
       // --name
-      } else if (args[k + 1] && args[k + 1].charAt('-') === 0) {
+      } else if (args[k + 1] && args[k + 1].charAt(0) === '-') {
         value = true
       // --name value
       } else {
